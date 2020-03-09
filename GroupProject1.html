@@ -1,0 +1,448 @@
+<!--Isaac Smith
+    JR Smith
+    Austin Chamberlain
+    Sydney Baker
+    Heber Robertson
+    Calvin Petty
+    Alicia Lane
+    Section 001 -->
+<!--Program Description: This program provides some information about the information systems program.  
+    It includes a link to the official Marriot School of Buisness website for IS.
+    It also includes an application that helps an individual determine their likelihood of getting into the program
+    if they were to apply, based on prerequisite grades.
+    HTML and CSS formatting have also been used in place of default formatting and styling to improve aesthetic.-->
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        //create function tied to "calculate" button
+        function calculateGrade()
+            {
+                //define variables
+                var sOutput = "";
+                var IS201grade;
+                var IS303grade;
+                var ACC200grade;
+                var FIN201grade;
+                var MKTG201grade; 
+                var byuLast30Grade = "";
+                var byuOverallGrade = "";
+                var totalGrade;
+                var aGradeScale = [4.0, 3.7, 3.4, 3.0, 2.7, 2.4, 2.0, 1.7, 1.4, 1.0, 0.7, 0.0];
+                var iIndexSpot;
+                var IS201check = document.getElementById("IS201retake");
+                var IS303check = document.getElementById("IS303retake");
+                var ACC200check = document.getElementById("ACC200retake");
+                var FIN201check = document.getElementById("FIN201retake");
+                var MKTG201check = document.getElementById("MKTG201retake");
+                var aClassesCheck = [IS201check, IS303check, ACC200check, FIN201check, MKTG201check];
+                var iCount;
+                var aIndividualGrade = [];
+                var aHoldGrade =[];
+                
+                //gather select option values and convert from string to float     
+                aIndividualGrade.push(parseFloat(document.getElementById("IS201").value)); //IS201
+                aIndividualGrade.push(parseFloat(document.getElementById("IS303").value)); //IS303
+                aIndividualGrade.push(parseFloat(document.getElementById("ACC200").value)); //ACC200
+                aIndividualGrade.push(parseFloat(document.getElementById("FIN201").value)); //FIN201
+                aIndividualGrade.push(parseFloat(document.getElementById("MKTG201").value)); //MKTG201
+                byuLast30Grade = parseFloat(document.getElementById("byuLast30").value);
+                byuOverallGrade = parseFloat(document.getElementById("byuOverall").value);
+            
+                //this sends an alert message if the text box fields have not data entered
+                if (isNaN(byuLast30Grade) || isNaN(byuOverallGrade))
+                    {
+                        alert("You must select an item in each drop down and enter a value in the GPA text boxes!");
+                        clearCircle();
+                    }
+                else
+                    {   
+                        //discount 1 step for a retake
+                        for (iCount = 0; iCount < aClassesCheck.length; iCount++)
+                            {
+                                aHoldGrade[iCount] = aIndividualGrade[iCount];
+                                if ((aClassesCheck[iCount].checked == true) && (aIndividualGrade[iCount] !== 0.0))
+                                    {
+                                        iIndexSpot = (aGradeScale.indexOf(aIndividualGrade[iCount]) + 1);
+                                        aIndividualGrade[iCount] = aGradeScale[iIndexSpot];
+                                    }
+                            }
+                    
+                        //calculate weighted GPA
+                        totalGrade = ((aIndividualGrade[0]*.20) + (aIndividualGrade[1]*.20) + ((aIndividualGrade[2]+aIndividualGrade[3]+aIndividualGrade[4])/3*.20) + (byuLast30Grade*.20) + (byuOverallGrade*.20));
+                        sOutput = totalGrade;
+                    
+                        //restore original grade values in case someone clicks the "calculate" button more than once.
+                        for (iCount=0; iCount < aClassesCheck.length; iCount++)
+                            {
+                                aIndividualGrade[iCount] = aHoldGrade[iCount];
+                            }
+                    
+                        if (totalGrade >= 3.7) //change circle color to green
+                            {
+                                document.getElementById("myCircle").style.display = "block";                                         
+                                document.getElementById("myCircle").style.fill="green";
+                            }
+                        else if (totalGrade >= 3.4) //change circle color to yellow
+                            {
+                                document.getElementById("myCircle").style.display = "block";                                         
+                                document.getElementById("myCircle").style.fill="yellow";
+                            }
+                        else //change circle color to red
+                            {
+                                document.getElementById("myCircle").style.display = "block";                                         
+                                document.getElementById("myCircle").style.fill="red";
+                            }
+                
+                        //display weighted grade (rounded to 2 decimals) in p-tag with id of "output"
+                        document.getElementById("output").innerHTML = "Your weighted application GPA is: " + sOutput.toFixed(2); 
+                    }
+            }
+        //remove output text and make circle fill color 'none' if reset button is clicked
+        function clearCircle()
+            {
+                document.getElementById("output").innerHTML = "";
+                document.getElementById("myCircle").style.display = "none";                                         
+                document.getElementById("myCircle").style.fill="none";
+            }
+    </script>
+    <!--CSS Styles here below-->
+    <style>
+        .circle
+        {
+            position: relative;
+            z-index: 5;
+        }
+        .toSee
+        {
+            font-weight:25;
+            color:#babfb4;
+            text-align:center;
+            font-size: 14pt;
+            font-family:calibri light;
+        }
+        .TBright
+        {
+            float:right;
+            margin-right: 36%;
+        }
+        .leftSide
+        {
+            float:left;
+            padding-left: 35%;
+            text-align: left;
+        }
+        .rightSide
+        {
+            padding-right: 35%;
+            float: right;
+            border: 0px;
+        }
+        .rightButton
+        {
+            padding-right: 35%;
+            float: right;
+            border: 0px;
+        }
+        .leftButton
+        {
+            padding-left: 35%;
+            float: left;
+            border: 0px;
+        }
+        .textBlocks
+        {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            border: midnightblue;
+            border-width: 10px;
+            border-radius: 12px;
+            fill-opacity: 1;
+            background-color: #221F54;
+            flood-opacity: .2;
+            margin-left: 150px;
+            margin-right: 150px;
+            margin-top: 15px;
+        }
+        .sidePanels
+        {
+            margin-top: 20px;
+            margin-right: 300px;
+            margin-left: 300px;
+            background-color: #babfb4;
+        }
+        body
+        {
+            background-color:white;
+            margin-top: 0px;
+        }
+        .h1
+        {
+            font-family: serif;
+            font-weight: 600;
+            color:#babfb4;
+            text-align: center;
+            text-decoration: underline;
+            font-size: 16pt;
+        }
+        .h2
+        {
+            font-family: serif;
+            font-weight: 600;
+            color:#221f54;
+            text-align: center;
+            text-transform:uppercase;
+            text-decoration: underline;
+            font-size: 22pt;
+        }
+        .subtext
+        {
+            font-family: serif;
+            font-weight: 600;
+            color:#babfb4;
+            text-align: center;
+            font-size: 10pt;
+        }
+        .input
+        {
+            font-weight: 200;
+            color:#babfb4;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
+        }
+        .myAlignment
+        {
+            text-align: center
+        }
+        .paragraph
+        {
+            font-weight:25;
+            color:#babfb4;
+            text-align:justify;
+            font-size: 14pt;
+            font-family:calibri light;
+        }
+        .button
+        {
+            background-color: #babfb4;
+            border: none;
+            color: midnightblue;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 12px;
+        }
+        .BTNmiddle
+        {
+            align-content: center;
+        }
+    </style>
+
+    <title class="h1">IS Program Application</title>
+</head>
+<body>
+    <div class="sidePanels">
+    <div>
+        <br>
+        <h2 class="h2">Information Systems</h2>
+    <!--blocks of text explaining IS program requried to post on website-->
+    </div>
+    <div class="textBlocks">
+    <h1 class="h1">Program Overview</h1>
+    <p class="paragraph">The BS Information Systems program is available as a four-year traditional degree or as a five-year integrated option 
+        where students earn both the BS IS and MISM degrees. The BS IS program is a 64-credit degree including 
+        pre-management, junior core, management core, and a capstone. Learn more <a style="color: white;" href="https://marriottschool.byu.edu/infosys/">here</a>.</p>
+    </div>
+    <br><br>
+    <div class="textBlocks">
+    <h1 class="h1">Curriculum</h1>
+    <p class="paragraph">Information systems students learn to define, develop, and maintain the information system infrastructure that supports the operations of
+         all businesses, governments, and other institutions. The BS Information Systems degree develops the ability to function effectively as a professional,
+          applying state-of-the-art technology in solving business problems. Students are trained in business and information systems 
+          and taught to understand complex business environments.<br><br>
+        
+        Built on a solid foundation of business courses, the curriculum advances students’ understanding of technologies in the design and development of information systems. 
+        They gain technical expertise in systems analysis; systems design and implementation; database development and management; programming; telecommunications networking; 
+        2-tier, 3-tier, and n-tier application development; and web application development.</p>
+    </div>
+    <br>
+    <!--Start of submission form-->
+    <div class="textBlocks myAlignment">
+    <p class="toSee">To see your likelihood of getting into the IS program, use the application below!</p>
+    <form onsubmit="calculateGrade()">
+    <legend class="h1">IS Program Application</legend>
+    <br><br>
+
+    <!--IS 201-->
+    <span class="leftSide">
+        <label for="IS201" class="input">IS 201</label>
+    </span>
+    <span class="rightSide">
+        <select id="IS201" name="IS201" autofocus>
+            <option value="4.0">A</option>
+            <option value="3.7">A-</option>
+            <option value="3.4">B+</option> 
+            <option value="3.0">B</option>
+            <option value="2.7">B-</option>
+            <option value="2.4">C+</option>
+            <option value="2.0">C</option>
+            <option value="1.7">C-</option>
+            <option value="1.4">D+</option>
+            <option value="1.0">D</option>
+            <option value="0.7">D-</option>
+            <option value="0.0">E</option>
+        </select>
+    <br>
+    <!--IS 201 retake-->
+    <label for="IS201retake" class="subtext">Retake</label>
+        <input type="checkbox" id="IS201retake">
+    </span>
+    <br><br><br>
+
+
+    <!--IS 303/CS 142-->
+    <span class="leftSide">
+        <label class="input" for="IS303">IS 303/<br>CS 142</label>
+    </span>
+    <span class="rightSide">
+    <select id="IS303" name="IS303">
+        <option value="4.0">A</option>
+        <option value="3.7">A-</option>
+        <option value="3.4">B+</option>
+        <option value="3.0">B</option>
+        <option value="2.7">B-</option>
+        <option value="2.4">C+</option>
+        <option value="2.0">C</option>
+        <option value="1.7">C-</option>
+        <option value="1.4">D+</option>
+        <option value="1.0">D</option>
+        <option value="0.7">D-</option>
+        <option value="0.0">E</option>
+    </select>
+    <br>
+    <!--IS 303 retake-->
+    <label for="IS303retake" class="subtext">Retake</label>
+    <input type="checkbox" id="IS303retake">
+    </span>
+    <br><br><br>
+
+    <!--ACC 200-->
+    <span class="leftSide">
+        <label for="ACC200" class="input">ACC 200</label>
+    </span>
+    <span class="rightSide">
+    <select id="ACC200" name="ACC200">
+        <option value="4.0">A</option>
+        <option value="3.7">A-</option>
+        <option value="3.4">B+</option>
+        <option value="3.0">B</option>
+        <option value="2.7">B-</option>
+        <option value="2.4">C+</option>
+        <option value="2.0">C</option>
+        <option value="1.7">C-</option>
+        <option value="1.4">D+</option>
+        <option value="1.0">D</option>
+        <option value="0.7">D-</option>
+        <option value="0.0">E</option>
+    </select>
+    <br>
+    <!--ACC 200 retake-->
+    <label for="ACC200retake" class="subtext">Retake</label>
+        <input type="checkbox" id="ACC200retake">
+    </span>
+        <br><br><br>
+
+    <!--FIN 201-->
+    <span class="leftSide">
+        <label for="FIN201" class="input">FIN 201</label>
+    </span>
+    
+    <span class="rightSide">
+    <select id="FIN201" name="FIN201">
+        <option value="4.0">A</option>
+        <option value="3.7">A-</option>
+        <option value="3.4">B+</option>
+        <option value="3.0">B</option>
+        <option value="2.7">B-</option>
+        <option value="2.4">C+</option>
+        <option value="2.0">C</option>
+        <option value="1.7">C-</option>
+        <option value="1.4">D+</option>
+        <option value="1.0">D</option>
+        <option value="0.7">D-</option>
+        <option value="0.0">E</option>
+    </select>
+    <br>
+    <!--FIN 201 retake-->
+    <label for="FIN201retake" class="subtext">Retake</label>
+    <input type="checkbox" id="FIN201retake">
+    </span>
+        <br><br><br>
+
+    <!--MKTG 201-->
+    <span class="leftSide">
+        <label for="MKTG201" class="input">MKTG 201</label>
+    </span>
+    <span class="rightSide">
+    <select id="MKTG201" name="MKTG201">
+        <option value="4.0">A</option>
+        <option value="3.7">A-</option>
+        <option value="3.4">B+</option>
+        <option value="3.0">B</option>
+        <option value="2.7">B-</option>
+        <option value="2.4">C+</option>
+        <option value="2.0">C</option>
+        <option value="1.7">C-</option>
+        <option value="1.4">D+</option>
+        <option value="1.0">D</option>
+        <option value="0.7">D-</option>
+        <option value="0.0">E</option>
+    </select>
+    <br>
+    <!--MKTG 201 retake-->
+    <label for="MKTG201retake" class="subtext">Retake</label>
+    <input type="checkbox" id="MKTG201retake">
+    </span>
+        <br><br><br>
+
+    <!--Textbox for overall BYU grade via input from user-->
+    <label for="byuOverall" class="input leftSide">BYU Overall GPA</label>
+    <input type="text" id="byuOverall" size="4" class="TBright">
+    <br><br>
+
+    <!--Textbox for last 30 BYU credits via input from user-->
+    <label for="byuLast30" class="input leftSide">BYU GPA <br> (Last 30 credits)</label>
+    <input type="text" id="byuLast30" size="4" class="TBright">
+    <br><br><br>
+
+    <!--Submit button-->
+    <div class="leftButton">
+        <input class="button" type="button" value="Calculate" id="submit" onclick="calculateGrade()">
+    </div>
+    <!--reset button-->
+    <div class="rightButton">
+        <input class="button" type="reset" name="reset" id="reset" onclick="clearCircle()">
+    </div>
+    </span>
+    </form>
+    <br>
+
+<!--output totalGrade result here-->
+<p class="toSee" id="output"></p>
+
+<!--green/yellow/red circle -->
+<svg  width="100" height="100">
+    <circle class="circle" id="myCircle" cx="50" cy="50" r="40" stroke="black" stroke-width="4" fill="white" display="none" />
+</svg>
+</div>
+</div>
+
+
+</body>
+</html>
